@@ -159,6 +159,32 @@ document.getElementById("chat-form").addEventListener("submit", async function(e
     // });
 });
 
+const messageData = [{
+        date: "May 25, 2023",
+        time: "10:30 AM",
+        text: "Had a productive day at work!",
+        rating: "4"
+    },
+    {
+        date: "May 24, 2023",
+        time: "9:15 PM",
+        text: "Went for a relaxing walk in the park.",
+        rating: "3"
+    },
+    {
+        date: "May 23, 2023",
+        time: "3:45 PM",
+        text: "Finished reading a great book.",
+        rating: "5"
+    },
+    {
+        date: "May 28, 2023",
+        time: "3:45 PM",
+        text: "Finished reading a great book.",
+        rating: "5"
+    }
+];
+
 // Handle button click for the second page
 document.getElementById("chat-container").addEventListener("click", function(e) {
     if (e.target && e.target.id === "done-btn") {
@@ -209,10 +235,13 @@ document.getElementById("chat-container").addEventListener("click", function(e) 
             console.log(messageText);
             console.log(ratingValue);
 
-            const chatContainer = document.getElementById("chat-container");
-            removeAllChildren(chatContainer);
 
-            if (messageText !== "") {
+
+            if (messageText !== "" && ratingValue !== "No rating") {
+
+                const chatContainer = document.getElementById("chat-container");
+                removeAllChildren(chatContainer);
+
                 const currentDate = new Date();
                 const messageDate = currentDate.toLocaleString("en-US", {
                     year: "numeric",
@@ -225,15 +254,73 @@ document.getElementById("chat-container").addEventListener("click", function(e) 
                     hour12: true
                 });
 
-                const newChatForm = document.createElement("div");
-                newChatForm.id = "chat-box";
+                // Create a message object
+                const message = {
+                    date: messageDate,
+                    time: messageTime,
+                    text: messageText,
+                    rating: ratingValue
+                };
 
-                newChatForm.innerHTML = "<p class='message-date'>" + messageDate + "</p>" +
-                    "<p class='message-time'>" + messageTime + "</p>" +
-                    "<p class='message-text'>" + messageText + "</p>" +
-                    "<p class='message-rating'>Rating: " + ratingValue + "</p>";
-                chatContainer.appendChild(newChatForm);
+                // Add the message to the messageData array
+                messageData.unshift(message);
+
+                // Limit the messageData array to hold only the most recent 3 entries
+                if (messageData.length > 3) {
+                    messageData.pop();
+                }
+
+                // Clear the chat container
+                removeAllChildren(chatContainer);
+
+                // Populate the most recent 3 entries
+                for (let i = 0; i < messageData.length; i++) {
+                    const message = messageData[i];
+
+                    const messageContainer = document.createElement("div");
+                    messageContainer.classList.add("message-container");
+                    messageContainer.innerHTML = "<p class='message-date'>" + message.date + "</p>" +
+                        "<p class='message-time'>" + message.time + "</p>" +
+                        "<p class='message-text'>" + message.text + "</p>" +
+                        "<p class='message-rating'>Rating: " + message.rating + "</p>";
+
+                    chatContainer.appendChild(messageContainer);
+                }
+                // Add the "More" button if there are older messages
+                if (messageData.length > 3) {
+                    const moreButton = document.createElement("button");
+                    moreButton.id = "more-btn";
+                    moreButton.innerText = "Show More";
+                    chatContainer.appendChild(moreButton);
+                }
             }
         });
+    }
+});
+
+// Handle "More" button click
+document.getElementById("chat-container").addEventListener("click", function(e) {
+    if (e.target && e.target.id === "more-btn") {
+        e.preventDefault();
+
+        const chatContainer = document.getElementById("chat-container");
+        const moreButton = document.getElementById("more-btn");
+
+        // Remove the "More" button
+        chatContainer.removeChild(moreButton);
+
+        // Load and display older messages
+        for (let i = 3; i < messageData.length; i++) {
+            const message = messageData[i];
+
+            const messageContainer = document.createElement("div");
+            messageContainer.classList.add("message-container");
+            messageContainer.innerHTML = "<p class='message-date'>" + message.date + "</p>" +
+                "<p class='message-time'>" + message.time + "</p>" +
+                "<p class='message-text'>" + message.text + "</p>" +
+                "<p class='message-rating'>Rating: " + message.rating + "</p>";
+
+            chatContainer.appendChild(messageContainer);
+        }
     }
 });

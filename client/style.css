@@ -77,3 +77,42 @@ button {
 .message {
     margin-top: 5px;
 }
+
+.message-container {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    width: 50%;
+}
+
+.message-date {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.message-time {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 5px;
+}
+
+.message-text {
+    margin-bottom: 10px;
+}
+
+.message-rating {
+    font-weight: bold;
+    color: #007bff;
+}
+
+#chat-container {
+    max-height: 100%;
+    /* Adjust the maximum height as needed */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    /* Display messages in reverse order */
+    padding: 10px;
+    /* box-sizing: border-box; */
+}
