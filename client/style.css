@@ -65,3 +65,15 @@ button {
     text-decoration: line-through;
     color: #999;
 }
+
+.timeline-item {
+    margin-bottom: 20px;
+}
+
+.timestamp {
+    font-weight: bold;
+}
+
+.message {
+    margin-top: 5px;
+}

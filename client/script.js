@@ -60,6 +60,15 @@ document.getElementById("chat-form").addEventListener("submit", async function(e
     const messageInput = document.getElementById("message-input");
     const prompt = messageInput.value;
 
+    // Clear previous chat
+    const chatContainer = document.getElementById("chat-container");
+    removeAllChildren(chatContainer);
+
+    const loadingIcon = document.createElement("div");
+    loadingIcon.id = "chat-box";
+    chatContainer.appendChild(loadingIcon);
+
+
     let activities;
     // Send message to OpenAI API and get response
     const response = await fetch("http://localhost:5000", {
@@ -82,20 +91,16 @@ document.getElementById("chat-form").addEventListener("submit", async function(e
             const match = botResponse.match(regex);
             activities = JSON.parse(match[0]);
 
+            const chatContainer = document.getElementById("chat-container");
+            removeAllChildren(chatContainer);
+
         })
         .catch(error => {
             // Handle any errors that occur during the request
             console.error(error);
         });
 
-    // Example response data
-    // const regex = /\[(.*?)\]/;
-    // const match = prompt.match(regex);
-    // activities = JSON.parse(match[0]);
-
-    // Clear previous chat
-    const chatContainer = document.getElementById("chat-container");
-    removeAllChildren(chatContainer);
+    // activities = ['9AM: surf']
 
     const newChatForm = document.createElement("div");
     newChatForm.id = "chat-box";
