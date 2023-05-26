@@ -26,14 +26,14 @@ app.post('/', async(req, res) => {
     try {
         const prompt = req.body.prompt
         const response = await openai.createCompletion({
-            model: "text-ada-001",
-            prompt: `${prompt}`,
+            model: "text-davinci-003",
+            prompt: `Output in an array: activities from the prompt delimited by """ and suggest activities based on goals and feelings in the prompt and populate hourly activities from 7am to 9pm """${prompt}"""`,
             temperature: 0,
             max_tokens: 256,
             top_p: 1,
             frequency_penalty: 0.5,
             presence_penalty: 0,
-            stop: ["\"\"\""],
+            // stop: ["\"\"\""],
         })
         res.status(200).send({
             bot: response.data.choices[0].text,

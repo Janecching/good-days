@@ -1,107 +1,3 @@
-// import bot from './assets/bot.svg'
-// import user from './assets/user.svg'
-
-// const form = document.querySelector('form')
-// const chatContainer = document.querySelector('#chat_container')
-
-// let loadInterval
-
-
-
-// // Display initial message
-// window.addEventListener('load', () => {
-//     const initialMessage = "Good morning, what's on your mind?";
-//     chatContainer.innerHTML += chatStripe(true, initialMessage, generateUniqueId());
-//     // chatContainer.scrollTop = chatContainer.scrollHeight;
-// });
-
-
-// function loader(element) {
-//     element.textContent = 'Okay let me see';
-//     let dots = '';
-//     loadInterval = setInterval(() => {
-//         dots += '.';
-//         element.textContent = `Okay let me see${dots}`;
-//         if (dots.length > 3) {
-//             dots = '';
-//         }
-//     }, 300);
-// }
-
-
-
-// function typeText(element, text) {
-//     let index = 0;
-//     let interval = setInterval(() => {
-//         if (index < text.length) {
-//             element.innerHTML += text.charAt(index)
-//             index++
-//         } else {
-//             clearInterval(interval)
-//         }
-//     }, 20)
-// }
-
-// function generateUniqueId() {
-//     const timestamp = Date.now()
-//     const randomNumber = Math.random()
-//     const hexadecimalString = randomNumber.toString(16)
-//     return `id-${timestamp}-${hexadecimalString}`
-// }
-
-// function chatStripe(isAi, value, uniqueId) {
-//     return (
-//         `
-//       <div class="wrapper ${isAi && 'ai'}">
-//         <div class="chat">
-//           <div className="profile">
-//             <img src="${isAi ? bot : user}" alt="${isAi ? 'bot' : 'user'}" />
-//           </div>
-//           <div class="message" id=${uniqueId}>${value}</div>
-//         </div>
-//       </div>
-//     `
-//     )
-// }
-
-// const handleSubmit = async(e) => {
-//     e.preventDefault()
-//     const data = new FormData(form)
-//     chatContainer.innerHTML += chatStripe(false, data.get('prompt'))
-//     form.reset()
-//     const uniqueId = generateUniqueId()
-//     chatContainer.innerHTML += chatStripe(true, '', uniqueId)
-//     chatContainer.scrollTop = chatContainer.scrollHeight
-//     const messageDiv = document.getElementById(uniqueId)
-//     loader(messageDiv)
-//     const response = await fetch('http://localhost:5000', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ prompt: data.get('prompt') })
-//     })
-//     clearInterval(loadInterval)
-//     messageDiv.innerHTML = '';
-//     if (response.ok) {
-//         const data = await response.json()
-//         const parsedData = data.bot.trim()
-//         console.log(parsedData)
-//         typeText(messageDiv, parsedData)
-//     } else {
-//         const err = await response.text()
-//         messageDiv.innerHTML = "Something went wrong"
-//         alert(err)
-//     }
-// }
-
-// form.addEventListener('submit', handleSubmit)
-// form.addEventListener('keyup', (e) => {
-//     if (e.keyCode === 13) {
-//         handleSubmit(e)
-//     }
-// })
-
 // Helper function to create a new todo item
 function createTodoItem(time, activity) {
     const todoItem = document.createElement("div");
@@ -162,36 +58,40 @@ document.getElementById("chat-form").addEventListener("submit", async function(e
     e.preventDefault();
 
     const messageInput = document.getElementById("message-input");
-    const message = messageInput.value;
+    const prompt = messageInput.value;
 
+    let activities;
     // Send message to OpenAI API and get response
-    const response = await fetch("YOUR_OPENAI_API_ENDPOINT", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ message })
-    });
+    const response = await fetch("http://localhost:5000", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ prompt })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Access the bot response from the data object
+            const botResponse = data.bot;
+
+            // Print or display the bot response in the frontend
+            console.log(botResponse);
+            // Alternatively, you can update a DOM element with the response
+            // Example: document.getElementById('response').textContent = botResponse;
+            const regex = /\[(.*?)\]/;
+            const match = botResponse.match(regex);
+            activities = JSON.parse(match[0]);
+
+        })
+        .catch(error => {
+            // Handle any errors that occur during the request
+            console.error(error);
+        });
 
     // Example response data
-    const schedule = [
-        { time: "7:00 AM", activity: "Morning Exercise" },
-        { time: "8:00 AM", activity: "Breakfast" },
-        { time: "9:00 AM", activity: "Meeting" },
-        { time: "10:00 AM", activity: "" },
-        { time: "11:00 AM", activity: "Coffee Break" },
-        { time: "12:00 PM", activity: "Lunch" },
-        { time: "1:00 PM", activity: "Work on Project" },
-        { time: "2:00 PM", activity: "" },
-        { time: "3:00 PM", activity: "" },
-        { time: "4:00 PM", activity: "Task Review" },
-        { time: "5:00 PM", activity: "Wrap Up Work" },
-        { time: "6:00 PM", activity: "" },
-        { time: "7:00 PM", activity: "Personal Time" },
-        { time: "8:00 PM", activity: "" },
-        { time: "9:00 PM", activity: "Watch TV Show" },
-        { time: "10:00 PM", activity: "Bedtime" },
-    ];
+    // const regex = /\[(.*?)\]/;
+    // const match = prompt.match(regex);
+    // activities = JSON.parse(match[0]);
 
     // Clear previous chat
     const chatContainer = document.getElementById("chat-container");
@@ -210,8 +110,10 @@ document.getElementById("chat-form").addEventListener("submit", async function(e
     // Populate todo list with response data
     const todoList = document.createElement("div");
     todoList.classList.add("todo-list");
-    schedule.forEach(({ time, activity }) => {
-        const todoItem = createTodoItem(time, activity);
+    activities.forEach(activity => {
+        const time = activity.substring(0, activity.indexOf(':')).trim();
+        const activityText = activity.substring(activity.indexOf(':') + 1).trim();
+        const todoItem = createTodoItem(time, activityText);
         todoList.appendChild(todoItem);
     });
 
