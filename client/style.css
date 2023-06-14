@@ -4,6 +4,11 @@
     justify-content: center;
     height: 100vh;
     width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
 }
 
 #chat-box {
@@ -34,6 +39,7 @@ button {
     border-width: 1.5px;
     border-radius: 20px;
     padding: 8px 20px;
+    font-family: 'Roboto', sans-serif;
 }
 
 #suggested-plan {
@@ -41,14 +47,21 @@ button {
 }
 
 .todo-list {
-    margin-top: 20px;
+    margin: 20px;
 }
 
 .todo-item {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    padding: 5px;
     text-align: left;
+    border-style: solid;
+    border-color: black;
+    border-width: 1.5px;
+    border-radius: 10px;
+    background-color: #A6D8D9;
+    font-family: 'Roboto', sans-serif;
 }
 
 .todo-item span {
@@ -57,11 +70,18 @@ button {
 }
 
 .todo-item button {
-    padding: 5px 10px;
-    background-color: #86ba64;
-    border: none;
+    padding: 2px 5px;
+    background-color: white;
+    border-style: solid;
+    border-color: black;
+    border-width: 1.5px;
     border-radius: 5px;
-    cursor: pointer;
+    width: 20px;
+    /* Set a fixed width for the button */
+    height: 20px;
+    /* Set a fixed height for the button */
+    line-height: 1;
+    /* Adjust line height to vertically center the checkmark */
 }
 
 .todo-item.checked span {
@@ -69,53 +89,114 @@ button {
     color: #999;
 }
 
-.timeline-item {
-    margin-bottom: 20px;
-}
-
-.timestamp {
-    font-weight: bold;
-}
-
-.message {
-    margin-top: 5px;
+.timeline-container {
+    height: 100%;
+    padding: 5%;
 }
 
 .message-container {
+    display: flex;
+    justify-content: space-between;
     background-color: #FAF9FB;
-    padding: 10px;
+    padding: 20px;
     margin-bottom: 10px;
     border-radius: 5px;
-    width: 50%;
+    width: 90%;
+    height: 10%;
+}
+
+.message-image {
+    height: 100%;
+    aspect-ratio: 1/1;
+    align-self: flex-end;
+    padding-right: 2px;
+    padding-left: 2px;
 }
 
 .message-date {
     font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.message-time {
-    font-size: 12px;
-    color: #999;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
 }
 
 .message-text {
     margin-bottom: 10px;
 }
 
-.message-rating {
-    font-weight: bold;
-    color: #007bff;
+.rating {
+    display: inline-block;
 }
 
-#chat-container {
-    max-height: 100%;
-    /* Adjust the maximum height as needed */
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    /* Display messages in reverse order */
-    padding: 10px;
-    /* box-sizing: border-box; */
+.rating input[type="radio"] {
+    display: none;
 }
+
+.rating label {
+    float: right;
+    width: 30px;
+    height: 30px;
+    background-image: url('/heart_outline.png');
+    /* Replace with your empty star image */
+    background-size: cover;
+    /* border: 1px solid #000; */
+    /* Add a border */
+}
+
+.rating label:before {
+    /* content: "\2605"; */
+    position: absolute;
+    /* opacity: 0.5; */
+    font-size: 24px;
+    /* Increase the font size to make the stars bigger */
+}
+
+.rating input[type="radio"]:checked~label {
+    background-image: url('/heart.png');
+    /* Replace with your filled star image */
+}
+
+.rating input[type="radio"]:checked~label:before {
+    opacity: 1;
+    /* color: rgb(255, 243, 5); */
+    font-size: 24px;
+    /* Increase the font size to make the filled stars bigger */
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 0 auto;
+    margin-top: 50%;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 300px;
+    text-align: center;
+    line-height: 2;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+/* .close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+} */

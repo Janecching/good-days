@@ -10,10 +10,14 @@ function createTodoItem(time, activity) {
     activityText.textContent = activity;
 
     const checkButton = document.createElement("button");
-    checkButton.textContent = "Check";
     checkButton.addEventListener("click", function() {
         todoItem.classList.toggle("checked");
         checkButton.classList.toggle("clicked");
+        if (checkButton.textContent === '') {
+            checkButton.textContent = '✓';
+        } else {
+            checkButton.textContent = '';
+        }
     });
 
     todoItem.appendChild(timeText);
@@ -45,7 +49,6 @@ function createTodoItem(time, activity) {
     return todoItem;
 }
 
-
 // Helper function to remove all child elements from a parent element
 function removeAllChildren(parent) {
     while (parent.firstChild) {
@@ -70,39 +73,44 @@ document.getElementById("chat-form").addEventListener("submit", async function(e
 
 
     let activities;
-    // // Send message to OpenAI API and get response
-    // const response = await fetch("http://localhost:5000", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json"
-    //         },
-    //         body: JSON.stringify({ prompt })
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         // Access the bot response from the data object
-    //         const botResponse = data.bot;
+    // Send message to OpenAI API and get response
+    const response = await fetch("http://localhost:5000", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ prompt })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Access the bot response from the data object
+            const botResponse = data.bot;
 
-    //         // Print or display the bot response in the frontend
-    //         console.log(botResponse);
-    //         // Alternatively, you can update a DOM element with the response
-    //         // Example: document.getElementById('response').textContent = botResponse;
-    //         const regex = /\[(.*?)\]/;
-    //         const match = botResponse.match(regex);
-    //         activities = JSON.parse(match[0]);
+            // Print or display the bot response in the frontend
+            console.log(botResponse);
+            // Alternatively, you can update a DOM element with the response
+            // Example: document.getElementById('response').textContent = botResponse;
+            const regex = /\[(.*?)\]/;
+            const match = botResponse.match(regex);
+            // activities = JSON.parse(match[0]);
+            if (match) {
+                activities = JSON.parse(match[0]);
+            } else {
+                activities = ['9AM: breakfast', '10AM: work', '11AM: gym', '12PM: lunch', '1PM: meeting', '2PM: project', '3PM: break', '4PM: research', '5PM: exercise', '6PM: dinner', '7PM: hobby', '8PM: relaxation', '9PM: sleep'];
+            }
 
-    //         const chatContainer = document.getElementById("chat-container");
-    //         removeAllChildren(chatContainer);
+            const chatContainer = document.getElementById("chat-container");
+            removeAllChildren(chatContainer);
 
-    //     })
-    //     .catch(error => {
-    //         // Handle any errors that occur during the request
-    //         console.error(error);
-    //     });
+        })
+        .catch(error => {
+            // Handle any errors that occur during the request
+            console.error(error);
+        });
 
 
     // for testing: 
-    activities = ['9AM: surf']
+    activities = ['9AM: breakfast', '10AM: work', '11AM: gym', '12PM: lunch', '1PM: meeting', '2PM: project', '3PM: break', '4PM: research', '5PM: exercise', '6PM: dinner', '7PM: hobby', '8PM: relaxation', '9PM: sleep'];
 
 
 
@@ -112,7 +120,7 @@ document.getElementById("chat-form").addEventListener("submit", async function(e
     newChatForm.id = "chat-box";
     const suggestedPlan = document.createElement("div");
     suggestedPlan.id = "suggested-plan";
-    suggestedPlan.innerHTML = "<p>Here’s your suggested plan for the day!<br>Feel free to drag to edit it</p>";
+    suggestedPlan.innerHTML = "<p>Remember, one step at a time</p>";
     newChatForm.appendChild(suggestedPlan);
 
     // Populate todo list with response data
@@ -159,31 +167,32 @@ document.getElementById("chat-form").addEventListener("submit", async function(e
     // });
 });
 
+
+
+
 const messageData = [{
         date: "May 25, 2023",
         time: "10:30 AM",
         text: "Had a productive day at work!",
-        rating: "4"
+        rating: "4",
+        image: "1.jpg"
     },
     {
         date: "May 24, 2023",
         time: "9:15 PM",
         text: "Went for a relaxing walk in the park.",
-        rating: "3"
+        rating: "3",
+        image: "2.jpg"
     },
     {
         date: "May 23, 2023",
         time: "3:45 PM",
         text: "Finished reading a great book.",
-        rating: "5"
-    },
-    {
-        date: "May 28, 2023",
-        time: "3:45 PM",
-        text: "Finished reading a great book.",
-        rating: "5"
+        rating: "5",
+        image: "3.jpg"
     }
 ];
+
 
 // Handle button click for the second page
 document.getElementById("chat-container").addEventListener("click", function(e) {
@@ -197,20 +206,25 @@ document.getElementById("chat-container").addEventListener("click", function(e) 
         // Show new chat form
         const newChatForm = document.createElement("div");
         newChatForm.id = "chat-box";
-        newChatForm.innerHTML = "<p>You are amazing!! What would you say about today?</p>" +
-
-            "<div class='rating'>" +
-            "<input type='radio' id='star1' name='rating' value='1' />" +
-            "<label for='star1' title='1 star'></label>" +
-            "<input type='radio' id='star2' name='rating' value='2' />" +
-            "<label for='star2' title='2 stars'></label>" +
-            "<input type='radio' id='star3' name='rating' value='3' />" +
-            "<label for='star3' title='3 stars'></label>" +
-            "</div>" +
-            "<form id='new-chat-form'>" +
-            "<textarea id='new-message-input' placeholder='What went / did not go well?'></textarea>" +
-            "<button type='submit'>End the day!</button>" +
-            "</form>";
+        newChatForm.innerHTML = `
+        <p>How was today?</p>
+        <div class="rating">
+        <input type="radio" id="star1" name="rating" value="1" />
+        <label for="star1" title="1 star"></label>
+        <input type="radio" id="star2" name="rating" value="2" />
+        <label for="star2" title="2 stars"></label>
+        <input type="radio" id="star3" name="rating" value="3" />
+        <label for="star3" title="3 stars"></label>
+        <input type="radio" id="star4" name="rating" value="4" />
+        <label for="star4" title="4 stars"></label>
+        <input type="radio" id="star5" name="rating" value="5" />
+        <label for="star5" title="5 stars"></label>
+        </div>
+        <form id="new-chat-form">
+        <textarea id="new-message-input" placeholder="What went / did not go well?"></textarea>
+        <button type="submit">End the day!</button>
+        </form>
+        `;
         chatContainer.appendChild(newChatForm);
 
         // Focus on the new message input
@@ -235,92 +249,155 @@ document.getElementById("chat-container").addEventListener("click", function(e) 
             console.log(messageText);
             console.log(ratingValue);
 
+            if (messageText == "" || ratingValue == "No rating") {
+                const htmlCode = `
+                  <div id="myModal" class="modal">
+                    <div class="modal-content">
+                      <span class="close">&times;</span>
+                      <p>Please fill in all the fields.</p>
+                    </div>
+                  </div>
+                `;
+
+                // Append the HTML code to the document body
+                document.body.insertAdjacentHTML("beforeend", htmlCode);
+
+                const modal = document.getElementById("myModal");
+                modal.style.display = "block";
+
+                const closeBtn = document.getElementsByClassName("close")[0];
+                closeBtn.onclick = function() {
+                    modal.style.display = "none";
+                };
+            }
+
 
 
             if (messageText !== "" && ratingValue !== "No rating") {
 
-                const chatContainer = document.getElementById("chat-container");
-                removeAllChildren(chatContainer);
+                // Code to handle photo upload modal
+                const htmlCode = `
+<div id="photoModal" class="modal">
+  <div class="modal-content">
+    <span class="photo-close">&times;</span>
+    <p>Add a photo.</p>
+    <form id="photoUploadForm">
+      <input type="file" id="photoInput" accept="image/*" />
+      <button type="submit">Upload</button>
+    </form>
+  </div>
+</div>
 
-                const currentDate = new Date();
-                const messageDate = currentDate.toLocaleString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric"
-                });
-                const messageTime = currentDate.toLocaleString("en-US", {
-                    hour: "numeric",
-                    minute: "numeric",
-                    hour12: true
-                });
+                `;
+                document.body.insertAdjacentHTML("beforeend", htmlCode);
+                const photoModal = document.getElementById("photoModal");
+                photoModal.style.display = "block";
 
-                // Create a message object
-                const message = {
-                    date: messageDate,
-                    time: messageTime,
-                    text: messageText,
-                    rating: ratingValue
+                const photoCloseBtn = document.getElementsByClassName("photo-close")[0];
+                photoCloseBtn.onclick = function() {
+                    photoModal.style.display = "none";
                 };
 
-                // Add the message to the messageData array
-                messageData.unshift(message);
 
-                // Limit the messageData array to hold only the most recent 3 entries
-                if (messageData.length > 3) {
-                    messageData.pop();
-                }
+                // Handle photo upload form submission
+                document.getElementById("photoUploadForm").addEventListener("submit", function(e) {
+                    e.preventDefault();
 
-                // Clear the chat container
-                removeAllChildren(chatContainer);
+                    // Handle the photo upload functionality here
 
-                // Populate the most recent 3 entries
-                for (let i = 0; i < messageData.length; i++) {
-                    const message = messageData[i];
+                    // Hide the photo upload modal
+                    const photoModal = document.getElementById("photoModal");
+                    photoModal.style.display = "none";
 
-                    const messageContainer = document.createElement("div");
-                    messageContainer.classList.add("message-container");
-                    messageContainer.innerHTML = "<p class='message-date'>" + message.date + "</p>" +
-                        "<p class='message-time'>" + message.time + "</p>" +
-                        "<p class='message-text'>" + message.text + "</p>" +
-                        "<p class='message-rating'>Rating: " + message.rating + "</p>";
+                    const chatContainer = document.getElementById("chat-container");
+                    removeAllChildren(chatContainer);
 
-                    chatContainer.appendChild(messageContainer);
-                }
-                // Add the "More" button if there are older messages
-                if (messageData.length > 3) {
-                    const moreButton = document.createElement("button");
-                    moreButton.id = "more-btn";
-                    moreButton.innerText = "Show More";
-                    chatContainer.appendChild(moreButton);
-                }
+                    const currentDate = new Date();
+                    const messageDate = currentDate.toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric"
+                    });
+                    const messageTime = currentDate.toLocaleString("en-US", {
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true
+                    });
+
+                    // Create a message object
+                    const message = {
+                        date: messageDate,
+                        time: messageTime,
+                        text: messageText,
+                        rating: ratingValue,
+                    };
+
+                    // Add the message to the messageData array
+                    messageData.unshift(message);
+
+                    const timelineContainer = document.createElement("div");
+                    timelineContainer.classList.add("timeline-container");
+                    // Populate the most recent 7 entries
+                    for (let i = 0; i < messageData.length; i++) {
+                        const message = messageData[i];
+
+                        const messageContainer = document.createElement("div");
+                        messageContainer.classList.add("message-container");
+                        let ratingImages = "";
+                        for (let i = 0; i < message.rating; i++) {
+                            ratingImages += `<img src="heart.png" style="width: 10px" alt="Heart Image" class="message-rating-image">`;
+                        }
+                        messageContainer.innerHTML = `
+                        <div>
+                        <p class='message-date'>${message.date} ${ratingImages}</p>
+                        <p class='message-text'>${message.text}</p>
+                        </div>
+                        <div>
+                        <img src="${message.image}" class="message-image">
+                        </div>
+                        `;
+
+                        timelineContainer.appendChild(messageContainer);
+                    }
+                    chatContainer.appendChild(timelineContainer);
+                    // Add the "More" button if there are older messages
+                    // if (messageData.length > 3) {
+                    //     const moreButton = document.createElement("button");
+                    //     moreButton.id = "more-btn";
+                    //     moreButton.innerText = "Show More";
+                    //     chatContainer.appendChild(moreButton);
+                    // }
+                });
             }
         });
+
     }
+
 });
 
 // Handle "More" button click
-document.getElementById("chat-container").addEventListener("click", function(e) {
-    if (e.target && e.target.id === "more-btn") {
-        e.preventDefault();
+// document.getElementById("chat-container").addEventListener("click", function(e) {
+//     if (e.target && e.target.id === "more-btn") {
+//         e.preventDefault();
 
-        const chatContainer = document.getElementById("chat-container");
-        const moreButton = document.getElementById("more-btn");
+//         const chatContainer = document.getElementById("chat-container");
+//         const moreButton = document.getElementById("more-btn");
 
-        // Remove the "More" button
-        chatContainer.removeChild(moreButton);
+//         // Remove the "More" button
+//         chatContainer.removeChild(moreButton);
 
-        // Load and display older messages
-        for (let i = 3; i < messageData.length; i++) {
-            const message = messageData[i];
+//         // Load and display older messages
+//         for (let i = 3; i < messageData.length; i++) {
+//             const message = messageData[i];
 
-            const messageContainer = document.createElement("div");
-            messageContainer.classList.add("message-container");
-            messageContainer.innerHTML = "<p class='message-date'>" + message.date + "</p>" +
-                "<p class='message-time'>" + message.time + "</p>" +
-                "<p class='message-text'>" + message.text + "</p>" +
-                "<p class='message-rating'>Rating: " + message.rating + "</p>";
+//             const messageContainer = document.createElement("div");
+//             messageContainer.classList.add("message-container");
+//             messageContainer.innerHTML = "<p class='message-date'>" + message.date + "</p>" +
+//                 "<p class='message-time'>" + message.time + "</p>" +
+//                 "<p class='message-text'>" + message.text + "</p>" +
+//                 "<p class='message-rating'>Rating: " + message.rating + "</p>";
 
-            chatContainer.appendChild(messageContainer);
-        }
-    }
-});
+//             chatContainer.appendChild(messageContainer);
+//         }
+//     }
+// });
