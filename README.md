@@ -8,20 +8,20 @@ Existing features:
 - Enables users to record journal entries, add pictures, and rate their day.
 
 Upcoming features:
-- Utilizes journal entries and day ratings to find correlations to suggest activities that contribute to a "good day."
-- monthly calendar view that displays uploaded pictures, encouraging users to maintain streaks
+- Analyzes journal entries and day ratings to suggest activities that contribute to a "good day".
+- Monthly calendar view that displays uploaded pictures, encouraging users to maintain streaks.
 
 ![ezgif com-video-to-gif](https://github.com/Janecching/one-day/assets/35574188/720e6142-293d-42e8-8fc1-a6cb21640398)
 
 Usage
-- View the application here (https://one-day-blue.vercel.app/)
-- Run it locally following installation steps below
+- View the application here (https://one-day-blue.vercel.app/).
+- Run it locally following installation steps below.
 
 Installation
 - Clone the repository
 - Install the dependencies: npm install
-- Set up the required environment variables (if any).
-- Start the application: npm run dev
+- Create .env and set up your OpenAI API credentials 
+- Start the application: cd client npm run dev; cd server npm run server
 
 Contributions are welcome!
 - Fork the repository.
