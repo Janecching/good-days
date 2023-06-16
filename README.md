@@ -23,7 +23,7 @@ Installation
 - Create .env and set up your OpenAI API credentials 
 - Start the application: cd client npm run dev; cd server npm run server
 
-Contributions are welcome!
+Contribution are welcomed!
 - Fork the repository.
 - Create a new branch: git checkout -b feature/your-feature.
 - Make your changes and commit them: git commit -m 'Add some feature'.
