@@ -1,4 +1,4 @@
-# One Day (at a time)
+# Good Days
 
 Webapp that makes each day the best one yet
 
