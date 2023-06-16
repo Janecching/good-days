@@ -221,7 +221,7 @@ document.getElementById("chat-container").addEventListener("click", function(e) 
         <label for="star5" title="5 stars"></label>
         </div>
         <form id="new-chat-form">
-        <textarea id="new-message-input" placeholder="What went / did not go well?"></textarea>
+        <textarea id="new-message-input" placeholder="What went / did not go well? Over time I'll share some insights on what activities form a good day"></textarea>
         <button type="submit">End the day!</button>
         </form>
         `;
@@ -312,6 +312,12 @@ document.getElementById("chat-container").addEventListener("click", function(e) 
                     const chatContainer = document.getElementById("chat-container");
                     removeAllChildren(chatContainer);
 
+                    const textContainer = document.createElement("div");
+                    textContainer.style.textAlign = 'center';
+                    textContainer.innerHTML = `
+                        <p>Wow! Look at how much you've grown</p>`
+                    chatContainer.appendChild(textContainer);
+
                     const currentDate = new Date();
                     const messageDate = currentDate.toLocaleString("en-US", {
                         year: "numeric",
@@ -335,8 +341,8 @@ document.getElementById("chat-container").addEventListener("click", function(e) 
                     // Add the message to the messageData array
                     messageData.unshift(message);
 
-                    const timelineContainer = document.createElement("div");
-                    timelineContainer.classList.add("timeline-container");
+                    // const timelineContainer = document.createElement("div");
+                    // timelineContainer.classList.add("timeline-container");
                     // Populate the most recent 7 entries
                     for (let i = 0; i < messageData.length; i++) {
                         const message = messageData[i];
@@ -357,9 +363,21 @@ document.getElementById("chat-container").addEventListener("click", function(e) 
                         </div>
                         `;
 
-                        timelineContainer.appendChild(messageContainer);
+                        chatContainer.appendChild(messageContainer);
+
                     }
-                    chatContainer.appendChild(timelineContainer);
+                    // chatContainer.appendChild(timelineContainer);
+
+                    const backButton = document.createElement("div");
+                    // backButton.id = "back-btn"; 
+                    backButton.id = "back-button";
+                    backButton.innerHTML = "<button id='back-btn'>Home</button>";
+                    chatContainer.appendChild(backButton);
+
+                    const homeButton = document.getElementById("back-btn");
+                    homeButton.addEventListener("click", function() {
+                        location.reload(); // Reload the page
+                    });
                     // Add the "More" button if there are older messages
                     // if (messageData.length > 3) {
                     //     const moreButton = document.createElement("button");
