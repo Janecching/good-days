@@ -74,39 +74,39 @@ document.getElementById("chat-form").addEventListener("submit", async function(e
 
     let activities;
     // Send message to OpenAI API and get response
-    const response = await fetch("http://localhost:5000", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ prompt })
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Access the bot response from the data object
-            const botResponse = data.bot;
+    // const response = await fetch("http://localhost:5000", {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify({ prompt })
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         // Access the bot response from the data object
+    //         const botResponse = data.bot;
 
-            // Print or display the bot response in the frontend
-            console.log(botResponse);
-            // Alternatively, you can update a DOM element with the response
-            // Example: document.getElementById('response').textContent = botResponse;
-            const regex = /\[(.*?)\]/;
-            const match = botResponse.match(regex);
-            // activities = JSON.parse(match[0]);
-            if (match) {
-                activities = JSON.parse(match[0]);
-            } else {
-                activities = ['9AM: breakfast', '10AM: work', '11AM: gym', '12PM: lunch', '1PM: meeting', '2PM: project', '3PM: break', '4PM: research', '5PM: exercise', '6PM: dinner', '7PM: hobby', '8PM: relaxation', '9PM: sleep'];
-            }
+    //         // Print or display the bot response in the frontend
+    //         console.log(botResponse);
+    //         // Alternatively, you can update a DOM element with the response
+    //         // Example: document.getElementById('response').textContent = botResponse;
+    //         const regex = /\[(.*?)\]/;
+    //         const match = botResponse.match(regex);
+    //         // activities = JSON.parse(match[0]);
+    //         if (match) {
+    //             activities = JSON.parse(match[0]);
+    //         } else {
+    //             activities = ['9AM: breakfast', '10AM: work', '11AM: gym', '12PM: lunch', '1PM: meeting', '2PM: project', '3PM: break', '4PM: research', '5PM: exercise', '6PM: dinner', '7PM: hobby', '8PM: relaxation', '9PM: sleep'];
+    //         }
 
-            const chatContainer = document.getElementById("chat-container");
-            removeAllChildren(chatContainer);
+    //         const chatContainer = document.getElementById("chat-container");
+    //         removeAllChildren(chatContainer);
 
-        })
-        .catch(error => {
-            // Handle any errors that occur during the request
-            console.error(error);
-        });
+    //     })
+    //     .catch(error => {
+    //         // Handle any errors that occur during the request
+    //         console.error(error);
+    //     });
 
 
     // for testing: 
